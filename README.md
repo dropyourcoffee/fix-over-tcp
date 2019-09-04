@@ -1,3 +1,17 @@
+# fix-over-tcp
+
+A Customizable FIX Protocol server-client implementation with headers over TCP
+
+
+Modifications
+--------
+Added Customizable Header over TCP.
+
+
+Originated from [logotype / fixparser](http://fixparser.sendercompid.com)
+
+--------------------------
+
 # fixparser
 
 This is the Javascript framework for working with FIX protocol messages. Compliant with FIX 5.0 SP2.
