@@ -11,8 +11,8 @@ import FIXParser, {
 import Header from "../src/Header";
 
 const fixParser = new FIXParser();
-const SENDER = 'BANZAI';
-const TARGET = 'EXEC';
+const SENDER = "MIRACLE-S";
+const TARGET = "AI-ALGO";
 
 const FixMsgSingleOrder = fixParser.createMessage(
     new Field(Fields.MsgType, Messages.NewOrderSingle),
@@ -51,6 +51,7 @@ fixParser.on('open', () => {
 });
 fixParser.on('message', (message) => {
     console.log('received message', message.description, message.string);
+    console.log("")
 });
 fixParser.on('close', () => {
     console.log('Disconnected');

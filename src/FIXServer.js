@@ -42,7 +42,7 @@ export default class FIXServer extends EventEmitter {
         this.fixVersion = 'FIX.5.0SP2';
     }
 
-    createServer(host = 'localhost', port = '9878', protocol = PROTOCOL_TCP) {
+    createServer(host = 'localhost', port = '9878', protocol = PROTOCOL_TCP, headerRule=null) {
         this.host = host;
         this.port = port;
         this.protocol = protocol;
@@ -55,11 +55,17 @@ export default class FIXServer extends EventEmitter {
                 this.port
             );
         } else if (this.protocol === PROTOCOL_TCP_HEADER) {
+            if(!headerRule){
+                console.error(
+                    ` Header Rule must be defined. `
+                );
+            }
             this.serverHandler = new FIXParserServerSocketWithHeader(
                 this,
                 this.fixParser,
                 this.host,
-                this.port
+                this.port,
+                headerRule,
             );
         } else if (this.protocol === PROTOCOL_WEBSOCKET) {
             this.serverHandler = new FIXParserServerWebsocket(
@@ -70,11 +76,11 @@ export default class FIXServer extends EventEmitter {
             );
         } else {
             console.error(
-                `[${Date.now()}] FIXServer: create server, invalid protocol`
+                `[${new Date().format("yyyyMMdd-HH:mm:ss.fff")}] FIXServer: create server, invalid protocol`
             );
         }
         console.log(
-            `[${new Date().format("yyyyMMdd-HH:mm:ss.fff")}] FIXServer started at ${this.host}:${this.port}`
+            `[${new Date().format("yyyyMMdd-HH:mm:ss.fff")}] FIXServer(${this.protocol}) started at ${this.host}:${this.port}`
         );
     }
 
@@ -89,6 +95,7 @@ export default class FIXServer extends EventEmitter {
     getTimestamp(dateObject = new Date()) {
         return this.fixParser.getTimestamp(dateObject);
     }
+
 
     createMessage(...fields) {
         return this.fixParser.createMessage(...fields);

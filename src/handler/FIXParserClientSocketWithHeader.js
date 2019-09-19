@@ -5,16 +5,24 @@ import FrameDecoder from '../util/FrameDecoder';
 import Header from "../Header";
 
 export default class FIXParserClientSocketWithHeader extends FIXParserClientBase {
+
+    constructor(eventEmitter, parser) {
+        super(eventEmitter, parser);
+        this.headerOffset = 0;
+        this.bodyOffset = Header.length;
+    }
+
     connect() {
         this.socket = new Socket();
         this.socket.setEncoding('ascii');
         this.socket.pipe(new FrameDecoder()).on('data', (data) => {
-            const messages = this.fixParser.parse(data.toString());
-            let i = 0;
-            for (i; i < messages.length; i++) {
-                this.processMessage(messages[i]);
-                this.eventEmitter.emit('message', messages[i]);
-            }
+            const header = data.slice(0, Header.length);
+            const body = data.slice(Header.length);
+            const message = this.fixParser.parse(data.toString())[0];
+
+            this.processMessage(header, message);
+            this.eventEmitter.emit("message", message);
+
         });
 
         this.socket.on('close', () => {
@@ -61,8 +69,8 @@ export default class FIXParserClientSocketWithHeader extends FIXParserClientBase
             // prepend header
             const rawMessage=message.encode();
             const packet = Buffer.allocUnsafe(Header.length + rawMessage.length);
-            packet.write(Header.ctx.toString(),0);
-            packet.write(rawMessage, Header.length);
+            packet.write(Header.ctx.toString(),this.headerOffset);
+            packet.write(rawMessage, this.bodyOffset);
 
             this.socket.write(packet);
         } else {
@@ -71,5 +79,11 @@ export default class FIXParserClientSocketWithHeader extends FIXParserClientBase
                 message
             );
         }
+    }
+    processMessage(header, message){
+        super.processMessage(message);
+        console.log(`[${new Date().format("yyyyMMdd-hh:mm:ss.ff")}] handle header here ::  ${header}`);
+
+
     }
 }

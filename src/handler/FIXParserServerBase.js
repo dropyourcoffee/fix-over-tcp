@@ -11,7 +11,7 @@ import * as Messages from './../constants/ConstantsMessage';
 import * as Fields from './../constants/ConstantsField';
 
 export default class FIXParserServerBase extends EventEmitter {
-    constructor(eventEmitter, parser, host, port) {
+    constructor(eventEmitter, parser, host, port, headerRule=null) {
         super();
         this.eventEmitter = eventEmitter;
         this.fixParser = parser;
@@ -23,7 +23,7 @@ export default class FIXParserServerBase extends EventEmitter {
         this.target = null;
         this.heartBeatInterval = null;
         this.heartBeatIntervalId = null;
-        this.createServer();
+        this.createServer(headerRule);
     }
 
     processMessage(message) {
