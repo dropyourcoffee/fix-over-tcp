@@ -9,7 +9,7 @@ import { EventEmitter } from 'events';
 
 import FIXParser from './FIXParser';
 import FIXParserServerSocket from './handler/FIXParserServerSocket';
-import FIXParserServerSocketWithHeader from './handler/FIXParserServerSocketWithHeader'
+import FIXParserServerSocketWithHeader from './handler/FIXParserServerSocketWithHeader';
 import FIXParserServerWebsocket from './handler/FIXParserServerWebsocket';
 import Message from './message/Message';
 import Field from './../src/fields/Field';

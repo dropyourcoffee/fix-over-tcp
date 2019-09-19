@@ -11,7 +11,7 @@ import { timestamp } from './util/util';
 import FIXParserBase from './FIXParserBase';
 import FIXParserClientSocket from './handler/FIXParserClientSocket';
 import FIXParserClientWebsocket from './handler/FIXParserClientWebsocket';
-import FIXParserClientSocketWithHeader from "./handler/FIXParserClientSocketWithHeader"
+import FIXParserClientSocketWithHeader from './handler/FIXParserClientSocketWithHeader';
 import Field from './../src/fields/Field';
 import Message from './message/Message';
 import * as Messages from './../src/constants/ConstantsMessage';

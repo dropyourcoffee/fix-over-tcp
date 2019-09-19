@@ -37,11 +37,11 @@ export const timestamp = (dateObject) => {
 Date.prototype.format = function(f) {
     if (!this.valueOf()) return " ";
 
-    let weekName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    let d = this;
+    const weekName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const d = this;
     let h;
 
-    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|fff|ff|a\/p)/gi, function($1) {
+    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|fff|ff|a\/p)/gi, ($1) => {
         switch ($1) {
             case "yyyy": return d.getFullYear();
             case "yy": return (d.getFullYear() % 1000).zf(2);
@@ -60,6 +60,6 @@ Date.prototype.format = function(f) {
     });
 };
 
-String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s += this; } return s;};
+String.prototype.string = function(len){let s = '', i = 0; while (i++ < len) { s += this; } return s;};
 String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
 Number.prototype.zf = function(len){return this.toString().zf(len);};

@@ -3,16 +3,15 @@ import { createServer } from 'net';
 import FIXParserServerBase from './FIXParserServerBase';
 import FrameDecoder from '../util/FrameDecoder';
 import Message from '../message/Message';
-import Header from "../Header"
-// import util from "../util/util"
+import Header from '../Header';
 
 export default class FIXParserServerSocketWithHeader extends FIXParserServerBase {
     createServer() {
         this.server = createServer((socket) => {
             this.socket = socket;
             this.socket.pipe(new FrameDecoder()).on('data', (data) => {
-                let header = data.slice(0, Header.length);
-                let body = data.slice(Header.length)
+                const header = data.slice(0, Header.length);
+                const body = data.slice(Header.length);
                 const message = this.fixParser.parse(body.toString())[0];
                 this.processMessage(header, message);
                 this.eventEmitter.emit('message', message);
@@ -50,7 +49,7 @@ export default class FIXParserServerSocketWithHeader extends FIXParserServerBase
     }
 
     processMessage(header, message){
-        super.processMessage(message)
+        super.processMessage(message);
         console.log(`[${new Date().format("yyyyMMdd-hh:mm:ss.ff")}] handle header here ::  ${header}`);
 
 

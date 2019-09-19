@@ -9,7 +9,6 @@ import { EventEmitter } from 'events';
 
 import * as Messages from './../constants/ConstantsMessage';
 import * as Fields from './../constants/ConstantsField';
-import util from "../util/util"
 
 export default class FIXParserServerBase extends EventEmitter {
     constructor(eventEmitter, parser, host, port) {

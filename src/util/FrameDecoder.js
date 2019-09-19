@@ -1,5 +1,6 @@
 import { Transform } from 'stream';
-import Header from "../Header"
+
+import Header from '../Header';
 
 export default class FrameDecoder extends Transform {
     constructor(opts) {

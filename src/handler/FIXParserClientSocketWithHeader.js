@@ -59,10 +59,10 @@ export default class FIXParserClientSocketWithHeader extends FIXParserClientBase
             );
 
             // prepend header
-            let rawMessage=message.encode()
-            let packet = Buffer.allocUnsafe(Header.length + rawMessage.length);
+            const rawMessage=message.encode();
+            const packet = Buffer.allocUnsafe(Header.length + rawMessage.length);
             packet.write(Header.ctx.toString(),0);
-            packet.write(rawMessage, Header.length)
+            packet.write(rawMessage, Header.length);
 
             this.socket.write(packet);
         } else {
