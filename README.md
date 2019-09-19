@@ -12,27 +12,22 @@ Originated from [logotype / fixparser](http://fixparser.sendercompid.com)
 
 --------------------------
 
-# fixparser
+# fix-over-tcp
 
 This is the Javascript framework for working with FIX protocol messages. Compliant with FIX 5.0 SP2.
 
 The Financial Information eXchange (FIX) protocol is an electronic communications protocol initiated in 1992 for international real-time exchange of information related to the securities transactions and markets.
 
-FIXParser demo
---------
-
-[FIXParser demo page](http://fixparser.sendercompid.com)
-
 
 Quick start
 -----------
 
-Install with `npm install fixparser`.
+Install with `npm install fix-over-tcp`.
 
 Parse a FIX message:
 
 ```javascript
-import FIXParser from 'fixparser';
+import FIXParser from 'fix-over-tcp';
 const fixParser = new FIXParser();
 console.log(fixParser.parse('8=FIX.4.2|9=51|35=0|34=703|49=ABC|52=20100130-10:53:40.830|56=XYZ|10=249|'));
 ```
@@ -49,7 +44,7 @@ import FIXParser, {
     HandlInst,
     TimeInForce,
     EncryptMethod
-} from 'fixparser';
+} from 'fix-over-tcp';
 const fixParser = new FIXParser();
 const order = fixParser.createMessage(
     new Field(Fields.MsgType, Messages.NewOrderSingle),
@@ -72,7 +67,7 @@ console.log(order.encode('|'));
 Connect over TCP socket (as client):
 
 ```javascript
-import FIXParser from 'fixparser';
+import FIXParser from 'fix-over-tcp';
 const fixParser = new FIXParser();
 fixParser.connect({ host: 'localhost', port: 9878, protocol: 'tcp', sender: 'BANZAI', target: 'EXEC', fixVersion: 'FIX.4.4' });
 fixParser.on('open', () => {
@@ -89,7 +84,7 @@ fixParser.on('close', () => {
 FIX Server:
 
 ```javascript
-import FIXServer from 'fixparser/server';
+import FIXServer from 'fix-over-tcp/server';
 const fixServer = new FIXServer();
 fixServer.createServer('localhost', 9878, 'tcp');
 fixServer.on('message', (message) => {
@@ -100,7 +95,7 @@ fixServer.on('message', (message) => {
 Connect over Webocket in a browser (as client):
 
 ```javascript
-import FIXParser from 'fixparser/browser';
+import FIXParser from 'fix-over-tcp/browser';
 const fixParser = new FIXParser();
 fixParser.connect({ host: 'localhost', port: 9878, sender: 'BANZAI', target: 'EXEC', fixVersion: 'FIX.4.4' });
 fixParser.on('open', () => {
@@ -123,7 +118,7 @@ Features
 + Validation (checksum and message length), includes FIX specification in parsed message
 + Supports various separators/start of headers (e.g. 0x01, ^ and |)
 + Clean and lightweight code
-+ Supports both node.js and browser environments (`import 'fixparser' from 'fixparser/browser';`)
++ Supports both node.js and browser environments (`import 'fix-over-tcp' from 'fix-over-tcp/browser';`)
 
 Performance
 -----------
@@ -165,7 +160,12 @@ It is also possible for a field to be contained in both the clear text portion a
 Authors
 -------
 
-**Victor Norgren**
+**Dexter Jung**
+
++ https://github.com/dropyourcoffee
++ https://dropyourcoffee.github.io
+
+**Victor Norgren** (original)
 
 + https://twitter.com/logotype
 + https://gitlab.com/logotype

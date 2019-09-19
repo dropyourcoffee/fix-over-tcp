@@ -11,6 +11,7 @@ import { timestamp } from './util/util';
 import FIXParserBase from './FIXParserBase';
 import FIXParserClientSocket from './handler/FIXParserClientSocket';
 import FIXParserClientWebsocket from './handler/FIXParserClientWebsocket';
+import FIXParserClientSocketWithHeader from './handler/FIXParserClientSocketWithHeader';
 import Field from './../src/fields/Field';
 import Message from './message/Message';
 import * as Messages from './../src/constants/ConstantsMessage';
@@ -20,9 +21,11 @@ import * as OrderTypes from './../src/constants/ConstantsOrderTypes';
 import * as HandlInst from './../src/constants/ConstantsHandlInst';
 import * as TimeInForce from './../src/constants/ConstantsTimeInForce';
 import * as EncryptMethod from './../src/constants/ConstantsEncryptMethod';
+import Header from "./Header";
 
 const PROTOCOL_TCP = 'tcp';
 const PROTOCOL_WEBSOCKET = 'websocket';
+const PROTOCOL_TCP_HEADER = 'tcp-header';
 
 export default class FIXParser extends EventEmitter {
     constructor() {
@@ -51,6 +54,9 @@ export default class FIXParser extends EventEmitter {
         switch (protocol) {
             case PROTOCOL_TCP:
                 this.clientHandler = new FIXParserClientSocket(this, this);
+                break;
+            case PROTOCOL_TCP_HEADER:
+                this.clientHandler = new FIXParserClientSocketWithHeader(this, this);
                 break;
             case PROTOCOL_WEBSOCKET:
                 this.clientHandler = new FIXParserClientWebsocket(this, this);
@@ -91,6 +97,10 @@ export default class FIXParser extends EventEmitter {
     }
 
     send(message) {
+        // let rawMessage=message.encode()
+        // let packet = Buffer.allocUnsafe(Header.length + rawMessage.length);
+        // packet.write(Header.ctx.toString(),0);
+        // packet.write(rawMessage, Header.length)
         this.clientHandler.send(message);
     }
 }

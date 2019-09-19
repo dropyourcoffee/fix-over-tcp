@@ -32,13 +32,13 @@ export default class FIXParserServerBase extends EventEmitter {
                 .value;
             if (newSeqNo) {
                 console.log(
-                    `[${Date.now()}] FIXServer new sequence number ${newSeqNo}`
+                    `[${new Date().format("yyyyMMdd-HH:mm:ss.ff")}]] FIXServer new sequence number ${newSeqNo}`
                 );
                 this.fixParser.setNextTargetMsgSeqNum(newSeqNo);
             }
         }
         console.log(
-            `[${Date.now()}] FIXServer received message ${message.description}`
+            `[${new Date().format("yyyyMMdd-HH:mm:ss.ff")}] FIXServer received message ${message.description}`
         );
     }
 }

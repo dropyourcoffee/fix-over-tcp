@@ -1,13 +1,13 @@
 {
-  "name": "fixparser",
-  "version": "2.8.0",
-  "description": "FIX 5.0SP2 Parser",
-  "main": "./fixparser.js",
+  "name": "fix-over-tcp",
+  "version": "0.0.1",
+  "description": "Custom TCP FIX protocol(beta",
+  "main": "./fix-over-tcp.js",
   "module": "./src/FIXParser.js",
   "browser": "./browser.js",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/logotype/fixparser.git"
+    "url": "git+https://gitlab.com/dropyourcoffee/fix-over-tcp.git"
   },
   "scripts": {
     "eslint": "eslint *.babel.js *.config.js spec src test prebuild",
@@ -22,7 +22,8 @@
     "client-websocket": "babel-node examples/example_websocketclient.js",
     "perf": "node perf/Perf-FIXParser.js",
     "test": "jest --colors",
-    "upgrade-interactive": "npm-check --update"
+    "upgrade-interactive": "npm-check --update",
+    "start": "node server.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
@@ -61,7 +62,7 @@
     "Websocket",
     "Financial Information eXchange"
   ],
-  "author": "Victor Norgren",
+  "author": "Dexter Jung",
   "license": "MIT",
   "jest": {
     "globals": {
@@ -81,5 +82,13 @@
   },
   "dependencies": {
     "ws": "^7.1.2"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/dropyourcoffee/fix-over-tcp/issues"
+  },
+  "homepage": "https://gitlab.com/dropyourcoffee/fix-over-tcp",
+  "directories": {
+    "example": "examples",
+    "test": "test"
   }
 }

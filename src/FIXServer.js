@@ -9,6 +9,7 @@ import { EventEmitter } from 'events';
 
 import FIXParser from './FIXParser';
 import FIXParserServerSocket from './handler/FIXParserServerSocket';
+import FIXParserServerSocketWithHeader from './handler/FIXParserServerSocketWithHeader';
 import FIXParserServerWebsocket from './handler/FIXParserServerWebsocket';
 import Message from './message/Message';
 import Field from './../src/fields/Field';
@@ -22,6 +23,8 @@ import * as EncryptMethod from './../src/constants/ConstantsEncryptMethod';
 
 const PROTOCOL_TCP = 'tcp';
 const PROTOCOL_WEBSOCKET = 'websocket';
+const PROTOCOL_TCP_HEADER = 'tcp-header';
+
 
 export default class FIXServer extends EventEmitter {
     constructor() {
@@ -51,6 +54,13 @@ export default class FIXServer extends EventEmitter {
                 this.host,
                 this.port
             );
+        } else if (this.protocol === PROTOCOL_TCP_HEADER) {
+            this.serverHandler = new FIXParserServerSocketWithHeader(
+                this,
+                this.fixParser,
+                this.host,
+                this.port
+            );
         } else if (this.protocol === PROTOCOL_WEBSOCKET) {
             this.serverHandler = new FIXParserServerWebsocket(
                 this,
@@ -64,7 +74,7 @@ export default class FIXServer extends EventEmitter {
             );
         }
         console.log(
-            `[${Date.now()}] FIXServer started at ${this.host}:${this.port}`
+            `[${new Date().format("yyyyMMdd-HH:mm:ss.fff")}] FIXServer started at ${this.host}:${this.port}`
         );
     }
 
