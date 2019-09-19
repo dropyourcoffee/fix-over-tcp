@@ -25,16 +25,25 @@ bundle:
   stage: bundle
   script:
    - npm run build
+  only:
+   - master
+   - develop
 
 test:
   stage: test
   script:
    - npm test
+  only:
+   - master
+   - develop
 
 performance:
   stage: performance
   script:
    - npm run perf
+  only:
+  - master
+  - develop
 
 pages:
   stage: deploy
