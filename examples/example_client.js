@@ -8,68 +8,46 @@ import FIXParser, {
     TimeInForce,
     EncryptMethod
 } from './../src/FIXParser'; // from 'fixparser';
+import Header from "../src/Header";
 
 const fixParser = new FIXParser();
 const SENDER = 'BANZAI';
 const TARGET = 'EXEC';
 
-function sendLogon() {
-    const logon = fixParser.createMessage(
-        new Field(Fields.MsgType, Messages.Logon),
-        new Field(Fields.MsgSeqNum, fixParser.getNextTargetMsgSeqNum()),
-        new Field(Fields.SenderCompID, SENDER),
-        new Field(Fields.SendingTime, fixParser.getTimestamp()),
-        new Field(Fields.TargetCompID, TARGET),
-        new Field(Fields.ResetSeqNumFlag, 'Y'),
-        new Field(Fields.EncryptMethod, EncryptMethod.None),
-        new Field(Fields.HeartBtInt, 10)
-    );
-    const messages = fixParser.parse(logon.encode());
-    console.log('sending message', messages[0].description, messages[0].string);
-    fixParser.send(logon);
-}
+const FixMsgSingleOrder = fixParser.createMessage(
+    new Field(Fields.MsgType, Messages.NewOrderSingle),
+    new Field(Fields.MsgSeqNum, fixParser.getNextTargetMsgSeqNum()),
+    new Field(Fields.SenderCompID, SENDER),
+    new Field(Fields.SendingTime, fixParser.getTimestamp()),
+    new Field(Fields.TargetCompID, TARGET),
+    new Field(Fields.ClOrdID, '11223344'),
+    new Field(
+        Fields.HandlInst,
+        HandlInst.AutomatedExecutionNoIntervention
+    ),
+    new Field(Fields.OrderQty, '123'),
+    new Field(Fields.TransactTime, fixParser.getTimestamp()),
+    new Field(Fields.OrdType, OrderTypes.Market),
+    new Field(Fields.Side, Side.Buy),
+    new Field(Fields.Symbol, '700.HK'),
+    new Field(Fields.TimeInForce, TimeInForce.Day)
+);
 
 fixParser.connect({
     host: 'localhost',
     port: 9878,
-    protocol: 'tcp',
+    protocol: 'tcp-header',
     sender: SENDER,
     target: TARGET,
-    fixVersion: 'FIX.4.4'
+    fixVersion: 'FIX.4.4',
+    heartbeatIntervalMs: 3000,
+
 });
 
 fixParser.on('open', () => {
     console.log('Open');
-
-    sendLogon();
-
-    setInterval(() => {
-        const order = fixParser.createMessage(
-            new Field(Fields.MsgType, Messages.NewOrderSingle),
-            new Field(Fields.MsgSeqNum, fixParser.getNextTargetMsgSeqNum()),
-            new Field(Fields.SenderCompID, SENDER),
-            new Field(Fields.SendingTime, fixParser.getTimestamp()),
-            new Field(Fields.TargetCompID, TARGET),
-            new Field(Fields.ClOrdID, '11223344'),
-            new Field(
-                Fields.HandlInst,
-                HandlInst.AutomatedExecutionNoIntervention
-            ),
-            new Field(Fields.OrderQty, '123'),
-            new Field(Fields.TransactTime, fixParser.getTimestamp()),
-            new Field(Fields.OrdType, OrderTypes.Market),
-            new Field(Fields.Side, Side.Buy),
-            new Field(Fields.Symbol, '700.HK'),
-            new Field(Fields.TimeInForce, TimeInForce.Day)
-        );
-        const messages = fixParser.parse(order.encode());
-        console.log(
-            'sending message',
-            messages[0].description,
-            messages[0].string.replace(/\x01/g, '|')
-        );
-        fixParser.send(order);
-    }, 500);
+    fixParser.send(FixMsgSingleOrder)
+    console.log("sent Packet.. ", FixMsgSingleOrder.encode().toString())
 });
 fixParser.on('message', (message) => {
     console.log('received message', message.description, message.string);
