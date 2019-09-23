@@ -8,11 +8,52 @@ import FIXParser, {
     TimeInForce,
     EncryptMethod
 } from './../src/FIXParser'; // from 'fixparser';
-import Header from "../src/Header";
 
 const fixParser = new FIXParser();
-const SENDER = "MIRACLE-S";
-const TARGET = "AI-ALGO";
+const headerRule = {
+    totalLength: 40,
+    Fields:[
+        {
+            name: "stx",
+            offset:0,
+            length:1,
+            get: function(msg){
+                return String.fromCharCode(Buffer.alloc(1, 0x02, 'base64')[0]); // STX
+            }
+
+        },
+        {
+            name: "len",
+            offset:1,
+            length:4,
+            get: function(msg){
+                return ("000"+ (this.totalLength + msg.body.length) ).slice(-4);
+            }
+
+        },
+        {
+            name: "connID",
+            offset:5,
+            length:6,
+            get: function(msg){
+                return "------"; // 6 spaces
+            }
+        },
+        {
+            name: "filler",
+            offset:11,
+            length:29,
+            get: (msg)=> {
+                return "                EOHeadercli ]"; // 6 spaces
+            }
+
+        },
+    ],
+
+};
+
+const SENDER = "CLIENT";
+const TARGET = "SERVER";
 
 const FixMsgSingleOrder = fixParser.createMessage(
     new Field(Fields.MsgType, Messages.NewOrderSingle),
@@ -37,6 +78,7 @@ fixParser.connect({
     host: 'localhost',
     port: 9878,
     protocol: 'tcp-header',
+    headerRule: headerRule,
     sender: SENDER,
     target: TARGET,
     fixVersion: 'FIX.4.4',

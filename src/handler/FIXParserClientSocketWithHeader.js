@@ -6,10 +6,11 @@ import Header from "../Header";
 
 export default class FIXParserClientSocketWithHeader extends FIXParserClientBase {
 
-    constructor(eventEmitter, parser) {
+    constructor(eventEmitter, parser, headerRule) {
         super(eventEmitter, parser);
         this.headerOffset = 0;
         this.bodyOffset = Header.length;
+        this.headerRule = headerRule
     }
 
     connect() {
@@ -65,11 +66,12 @@ export default class FIXParserClientSocketWithHeader extends FIXParserClientBase
             this.fixParser.setNextTargetMsgSeqNum(
                 this.fixParser.getNextTargetMsgSeqNum() + 1
             );
-
-            // prepend header
             const rawMessage=message.encode();
-            const packet = Buffer.allocUnsafe(Header.length + rawMessage.length);
-            packet.write(Header.ctx.toString(),this.headerOffset);
+
+            const packet = Buffer.allocUnsafe(this.headerRule.totalLength + rawMessage.length);
+            this.headerRule.Fields.forEach(field=>{
+                packet.write(field.get.bind(this.headerRule)({body: rawMessage}).toString(), field.offset );
+            })
             packet.write(rawMessage, this.bodyOffset);
 
             this.socket.write(packet);

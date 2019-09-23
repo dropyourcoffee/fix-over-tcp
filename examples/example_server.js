@@ -38,7 +38,6 @@ const headerRule = {
             get: function(msg){
                 return "______"; // 6 spaces
             }
-
         },
         {
             name: "filler",
@@ -51,15 +50,14 @@ const headerRule = {
         },
     ],
 
-
 };
 
 const protocol =  (process.argv.length>2)? "tcp":"tcp-header";
 
 
 fixServer.createServer('localhost', 9878, protocol, headerRule);
-const SENDER = "AI-ALGO";
-const TARGET = "MIRACLE-S";
+const SENDER = "SERVER";
+const TARGET = "CLIENT";
 
 const FixMsgSingleOrder = fixServer.createMessage(
     new Field(Fields.MsgType, Messages.NewOrderSingle),

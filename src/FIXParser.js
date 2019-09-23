@@ -46,6 +46,7 @@ export default class FIXParser extends EventEmitter {
         host = 'localhost',
         port = '9878',
         protocol = PROTOCOL_TCP,
+        headerRule = null,
         sender = 'SENDER',
         target = 'TARGET',
         heartbeatIntervalMs = 30000,
@@ -56,7 +57,13 @@ export default class FIXParser extends EventEmitter {
                 this.clientHandler = new FIXParserClientSocket(this, this);
                 break;
             case PROTOCOL_TCP_HEADER:
-                this.clientHandler = new FIXParserClientSocketWithHeader(this, this);
+                if(!!headerRule){
+                    this.headerRule = headerRule
+                    this.clientHandler = new FIXParserClientSocketWithHeader(this, this, headerRule);
+                }
+                else{
+                    console.error(`Header Rule must be defined `);
+                }
                 break;
             case PROTOCOL_WEBSOCKET:
                 this.clientHandler = new FIXParserClientWebsocket(this, this);
